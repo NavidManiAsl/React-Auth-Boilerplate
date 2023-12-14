@@ -41,6 +41,10 @@
   padding-left: 15px;
   width: auto;
 }
+.input:focus,
+.input-password:focus {
+  outline: none;
+}
 
 .input-password {
   font-size: large;
@@ -129,7 +133,6 @@
 .show-icon {
   position: absolute;
   right: 10px;
-  /* Adjust this value based on your design */
   top: 50%;
   transform: translateY(-50%);
   color: black;
