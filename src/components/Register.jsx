@@ -206,6 +206,7 @@ function Register() {
           className="Registerbutton"
           disabled={
             !formDataValidity.username ||
+            !formDataValidity.email ||
             !formDataValidity.password ||
             !formDataValidity.passwordConfirm
           }
