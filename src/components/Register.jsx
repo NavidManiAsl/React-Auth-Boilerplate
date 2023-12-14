@@ -7,26 +7,32 @@ import {
   faEyeSlash,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 function Register() {
   const pattern = {
     username: /^[a-z0-9_-]{3,15}$/,
     password: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/,
+    email:
+      /^[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/,
   };
 
   const [formData, setFormdata] = useState({
     username: "",
+    email: "",
     password: "",
     passwordConfirm: "",
   });
-  
+
   const [formDataValidity, SetFormDataValidity] = useState({
     username: false,
+    email: false,
     password: false,
     passwordConfirm: false,
   });
-  
+
   const [usernameFocus, setUsernameFocus] = useState(false);
   const [passwordFocus, setPasswordFocus] = useState(false);
+  const [emailFocus, setEmailFocus] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const inputRef = useRef(null);
 
@@ -40,6 +46,13 @@ function Register() {
       username: pattern.username.test(formData.username),
     }));
   }, [formData.username]);
+
+  useEffect(() => {
+    SetFormDataValidity((prevstate) => ({
+      ...prevstate,
+      email: pattern.email.test(formData.email),
+    }));
+  });
 
   useEffect(() => {
     SetFormDataValidity((prevstate) => ({
@@ -63,8 +76,6 @@ function Register() {
       [e.target.name]: e.target.value,
     }));
   };
-
-  useEffect(() => console.log(formDataValidity), [formData]);
 
   return (
     <section className="body">
@@ -100,7 +111,34 @@ function Register() {
           <FontAwesomeIcon className="info-icon" icon={faInfoCircle} />
           Alphanumeric, may include _ and - length of 3 to 16 characters.
         </p>
-
+        <label htmlFor="email" className="label">
+          email:
+          <FontAwesomeIcon
+            icon={
+              formData.email && (formDataValidity.email ? faCheck : faTimes)
+            }
+            className={formDataValidity.email ? "check" : "cross"}
+          />
+        </label>
+        <input
+          type="text"
+          name="email"
+          className="input"
+          autoComplete="off"
+          onBlur={() => setEmailFocus(false)}
+          onFocus={() => setEmailFocus(true)}
+          onChange={handleInputChange}
+        />
+        <p
+          className={
+            formData.email && !formDataValidity.email && emailFocus
+              ? "info"
+              : "hidden"
+          }
+        >
+          <FontAwesomeIcon className="info-icon" icon={faInfoCircle} />
+          Enter a valid email.
+        </p>
         <label htmlFor="password" className="label">
           Password:
           <FontAwesomeIcon
@@ -116,6 +154,7 @@ function Register() {
             icon={showPassword ? faEyeSlash : faEye}
             onClick={() => setShowPassword(!showPassword)}
             className="show-icon"
+            title={!showPassword ? "Show password" : "Hide password"}
           />
           <input
             type={showPassword ? "text" : "password"}
