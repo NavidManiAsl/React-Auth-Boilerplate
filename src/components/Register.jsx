@@ -52,7 +52,7 @@ function Register() {
       ...prevstate,
       email: pattern.email.test(formData.email),
     }));
-  });
+  },[formData.email]);
 
   useEffect(() => {
     SetFormDataValidity((prevstate) => ({
@@ -83,13 +83,12 @@ function Register() {
         <h1 className="header">Register</h1>
         <label htmlFor="username" className="label">
           Username:
-          <FontAwesomeIcon
-            icon={
-              formData.username &&
-              (formDataValidity.username ? faCheck : faTimes)
-            }
-            className={formDataValidity.username ? "check" : "cross"}
-          />
+          {formData.username && (
+            <FontAwesomeIcon
+              icon={formDataValidity.username ? faCheck : faTimes}
+              className={formDataValidity.username ? "check" : "cross"}
+            />
+          )}
         </label>
         <input
           type="text"
@@ -113,12 +112,12 @@ function Register() {
         </p>
         <label htmlFor="email" className="label">
           email:
-          <FontAwesomeIcon
-            icon={
-              formData.email && (formDataValidity.email ? faCheck : faTimes)
-            }
-            className={formDataValidity.email ? "check" : "cross"}
-          />
+          {formData.email && (
+            <FontAwesomeIcon
+              icon={formDataValidity.email ? faCheck : faTimes}
+              className={formDataValidity.email ? "check" : "cross"}
+            />
+          )}
         </label>
         <input
           type="text"
@@ -141,13 +140,13 @@ function Register() {
         </p>
         <label htmlFor="password" className="label">
           Password:
-          <FontAwesomeIcon
+        { formData.password && <FontAwesomeIcon
             icon={
-              formData.password &&
+              
               (formDataValidity.password ? faCheck : faTimes)
             }
             className={formDataValidity.password ? "check" : "cross"}
-          />
+          />}
         </label>
         <div className="input-container">
           <FontAwesomeIcon
@@ -178,13 +177,13 @@ function Register() {
         </p>
         <label htmlFor="passwordConfirm" className="label">
           Confirm password:
-          <FontAwesomeIcon
+          {formData.password && <FontAwesomeIcon
             icon={
-              formData.password &&
+              
               (formDataValidity.passwordConfirm ? faCheck : faTimes)
             }
             className={formDataValidity.passwordConfirm ? "check" : "cross"}
-          />
+          />}
         </label>
         <input
           type="password"
