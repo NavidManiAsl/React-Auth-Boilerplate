@@ -1,8 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { faInfo } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { pattern } from "../Constants/regex";
+import { faCheck, faTimes, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 const Login = () => {
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -35,6 +38,22 @@ const Login = () => {
     }));
   };
 
+  useEffect(()=>{
+    setFormDataValidity(prevState=>({
+      ...prevState, email: pattern.email.test(formData.email)
+    }))
+  },[formData.email])
+
+  useEffect(()=>{
+    setFormDataValidity(prevstate=>({
+      ...prevstate, password:pattern.password.test(formData.password)
+    }))
+  },[formData.password])
+
+ useEffect(()=>{
+  console.log()
+ },[formData.email])
+
   return (
     <>
       <section className="body">
@@ -43,26 +62,48 @@ const Login = () => {
 
           <label className="label" htmlFor="email">
             Email address
+          {  formData.email && <FontAwesomeIcon
+            icon={
+              (formDataValidity.email ? faCheck : faTimes)
+            }
+            className={formDataValidity.email ? "check" : "cross"}
+          />}
           </label>
           <input
             className="input"
-            type="text"
+            type="email"
             ref={inputRef}
             name="email"
             onFocus={handleFocus}
             onChange={handleChange}
           />
-          <label className="label" htmlFor="password">
-            Password
-          </label>
-          <input
-            className="input"
-            type="text"
-            name="password"
-            onFocus={handleFocus}
-            onChange={handleChange}
+            <label htmlFor="password" className="label">
+          Password:
+          {formData.password && <FontAwesomeIcon
+            icon={
+             
+              (formDataValidity.password ? faCheck : faTimes)
+            }
+            className={formDataValidity.password ? "check" : "cross"}
+          />}
+        </label>
+        <div className="input-container">
+          <FontAwesomeIcon
+            icon={showPassword ? faEyeSlash : faEye}
+            onClick={() => setShowPassword(!showPassword)}
+            className="show-icon"
+            title={!showPassword ? "Show password" : "Hide password"}
           />
-          <button className="Registerbutton">Log In</button>
+          <input
+            type={showPassword ? "text" : "password"}
+            name="password"
+            className="input-password"
+            onChange={handleChange}
+            onFocus={() => handleFocus}
+            autoComplete="off"
+          />
+        </div>
+          <button className="Registerbutton" disabled={!formDataValidity.email || !formDataValidity.password}>Log In</button>
           <p className="attention">
             Do not have an account?
             <a href="#" className="link">
